@@ -230,6 +230,21 @@ if train_file and test_file:
 
                     st.write(f"Balanced Accuracy: {mean_score:.4f}")
                     st.write(f"Training Time: {elapsed_time:.2f} seconds")
+                    
+                    model.fit(X_train, y_train)
+                    
+                    # Generate predictions on the test set
+                    test_data["willing_to_change_job"] = model.predict(X_test)
+
+                    # Save predictions to a CSV file
+                    file_name = f"test_predictions_{name}_{int(time.time())}.csv"
+                    st.download_button(
+                        label="Download Predictions",
+                        data=test_data[["id", "willing_to_change_job"]].to_csv(index=False),
+                        file_name=file_name,
+                        mime="text/csv",
+                        key=f"download_predictions_{name}_{int(time.time())}"
+                    )
 
             # Stacking Model
             if stacking_models:
